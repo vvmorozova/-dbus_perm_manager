@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/dbus_perm.dir/dbus_perm.cpp.o -o dbus_perm  /usr/lib/x86_64-linux-gnu/libsdbus-c++.so.1.1.0 
