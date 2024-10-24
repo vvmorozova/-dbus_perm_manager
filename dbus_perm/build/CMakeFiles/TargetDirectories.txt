@@ -1,3 +1,0 @@
-/mnt/c/Users/jadoba/Documents/dbus_perm_manager/dbus_perm/build/CMakeFiles/dbus_perm.dir
-/mnt/c/Users/jadoba/Documents/dbus_perm_manager/dbus_perm/build/CMakeFiles/edit_cache.dir
-/mnt/c/Users/jadoba/Documents/dbus_perm_manager/dbus_perm/build/CMakeFiles/rebuild_cache.dir
