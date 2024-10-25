@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
     // auto connection = sdbus::createSessionBusConnection(serviceName);
     auto connection = sdbus::createSessionBusConnection();
 
-    sdbus::ServiceName destination{"com.system.permissions"};
+    // sdbus::name destination{"com.system.permissions"};
     sdbus::ObjectPath objectPath{"/com/system/permissions"};
     // auto dbusProxy = sdbus::createProxy(*connection, "org.freedesktop.DBus", "/org/freedesktop/DBus");
-    auto dbusProxy = sdbus::createProxy(std::move(destination), std::move(objectPath));
+    auto dbusProxy = sdbus::createProxy(serviceName, std::move(objectPath));
 
     pid_t pid;
     dbusProxy->callMethod("GetConnectionUnixProcessID")
@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
     // permissionManager->registerMethod("RequestPermission").onInterface(interfaceName).implementedAs(&RequestPermission);
     // permissionManager->registerSignal("RequestedPermission").onInterface(interfaceName).withParameters(0);
     // permissionManager->finishRegistration();
+
 
     connection->enterEventLoop();
 }

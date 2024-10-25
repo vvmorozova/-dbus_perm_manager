@@ -29,6 +29,7 @@ WORKDIR /usr/src/PermissionService
 
 COPY dbus_perm.cpp /usr/src/PermissionService/
 COPY CMakeLists.txt /usr/src/PermissionService/
+COPY com.system.permissions.service /usr/share/dbus-1/services/
 
 # Step 6: Build the application using CMake
 RUN mkdir build && cd build && \
