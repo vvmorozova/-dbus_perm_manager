@@ -1,3 +1,8 @@
-[D-BUS Service]
-Name=com.system.permissions
-Exec=/path/to/your/dbus_perm
+[Unit]
+Description=com.system.permissions
+
+[Service]
+ExecStart=/home/vasuyan/Documents/dbus_perm_manager/dbus_perm/build/dbus_perm
+
+[Install]
+WantedBy=multi-user.target
