@@ -20,28 +20,23 @@ void RequestPermission(int permissionEnumCode)
 
 int main(int argc, char *argv[])
 {
-    const char *serviceName = "com.system.permissions";
-    // auto connection = sdbus::createSessionBusConnection(serviceName);
-    auto connection = sdbus::createSessionBusConnection();
+    const char* serviceName = "com.system.permissions";
+    auto connection = sdbus::createSystemBusConnection(serviceName);
 
-    // sdbus::name destination{"com.system.permissions"};
+
+    // Register D-Bus property on the object, and export the object.
     sdbus::ObjectPath objectPath{"/com/system/permissions"};
     // auto dbusProxy = sdbus::createProxy(*connection, "org.freedesktop.DBus", "/org/freedesktop/DBus");
     auto dbusProxy = sdbus::createProxy(serviceName, std::move(objectPath));
 
+    const char* interfaceName = "com.system.permissions";
     pid_t pid;
-    dbusProxy->callMethod("GetConnectionUnixProcessID")
-        .onInterface("org.freedesktop.DBus")
+    dbusProxy->callMethod("RequestPermission")
+        .onInterface(interfaceName)
         .withArguments(serviceName)
         .storeResultsTo(pid);
 
-    // g_permissionManager = permissionManager.get();
-
-    const char *interfaceName = "com.system.permissions.permissionManager";
-    // permissionManager->registerMethod("RequestPermission").onInterface(interfaceName).implementedAs(&RequestPermission);
-    // permissionManager->registerSignal("RequestedPermission").onInterface(interfaceName).withParameters(0);
-    // permissionManager->finishRegistration();
-
-
+    std::cout << "in dbus main" << std::endl;
     connection->enterEventLoop();
+
 }
