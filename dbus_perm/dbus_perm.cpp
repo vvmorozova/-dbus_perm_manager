@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 // auto object = sdbus::createObject(*connection, "/");
 
     object->registerMethod("RequestPermission").onInterface("com.system.permissions").withInputParamNames("permissionEnumCode").implementedAs(RequestPermission);
+    object->finishRegistration();
     std::cout << "init object " << object->getObjectPath() << std::endl;
     connection->enterEventLoop();
 
