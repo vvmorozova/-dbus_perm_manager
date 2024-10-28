@@ -11,3 +11,6 @@ FIX PATHES EVERYWHERE
 not send but call
 gdbus call -e -d com.system.permissions -o / -m com.system.permissions.RequestPermission 0
 CLARIFY SDBUS VERSION
+
+sudo apt install  sqlite3 sqlite3-tools
+create sqlite db permissions sqlite3 permissions.db

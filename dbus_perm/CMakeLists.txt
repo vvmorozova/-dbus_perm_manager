@@ -13,6 +13,7 @@ add_executable(dbus_perm ${SRC_FILES})
 
 include_directories(${SQLITE3_INCLUDE_DIRS})
 target_link_libraries (dbus_perm ${SQLITE3_LIBRARIES})
+target_link_libraries(dbus_perm LINK_PUBLIC sqlite3)
 
 # Use the sdbus-c++ target in SDBusCpp namespace
 target_link_libraries(dbus_perm PRIVATE SDBusCpp::sdbus-c++)

@@ -13,3 +13,22 @@ uint32_t getPid(const std::string &senderName,
       .storeResultsTo(pid);
   return pid;
 }
+
+std::string getPath(std::unique_ptr<sdbus::IObject> &dbusObject,
+                    std::unique_ptr<sdbus::IConnection> &connection) {
+  auto senderDBusName = dbusObject->getCurrentlyProcessedMessage()->getSender();
+
+  char pidPath[254];
+
+  sprintf(pidPath, "/proc/%d/cmdline", getPid(senderDBusName, connection));
+
+  if (access(pidPath, F_OK) == -1) {
+    throw std::runtime_error("No process with this pid");
+  }
+
+  std::ifstream infile(pidPath);
+  std::string path;
+  infile >> path;
+
+  return path;
+}
