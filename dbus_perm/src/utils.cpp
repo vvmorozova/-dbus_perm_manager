@@ -23,7 +23,9 @@ std::string getPath(std::unique_ptr<sdbus::IObject> &dbusObject,
   sprintf(pidPath, "/proc/%d/cmdline", getPid(senderDBusName, connection));
 
   if (access(pidPath, F_OK) == -1) {
-    throw std::runtime_error("No process with this pid");
+    std::string connectionName;
+    connection->requestName(connectionName);
+    throw sdbus::Error(connectionName, "No process with this pid");
   }
 
   std::ifstream infile(pidPath);

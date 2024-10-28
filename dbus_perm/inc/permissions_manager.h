@@ -14,6 +14,8 @@ public:
 
 private:
   void RequestPermission(int permissionEnumCode);
+  bool CheckApplicationHasPermission(std::string applicationExecPath,
+                                     int permissionEnumCode);
 
   std::unique_ptr<sdbus::IObject> dbusObject;
   std::unique_ptr<sdbus::IConnection> connection;
