@@ -2,20 +2,14 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_CXX_STANDARD 17)
 project(dbus_perm)
 
+include_directories(${CMAKE_SOURCE_DIR}/inc)
+
+file(GLOB SRC_FILES ${CMAKE_SOURCE_DIR}/src/*cpp)
+
 find_package(sdbus-c++ REQUIRED)
 find_package (SQLite3 REQUIRED)
 
-# find_package(sdbus-c++-tools REQUIRED)
-
-# add_custom_command(
-#     OUTPUT myproject-client-glue.h myproject-server-glue.h
-#     COMMAND SDBusCpp::sdbus-c++-xml2cpp ${PROJECT_SOURCE_DIR}/dbus/myproject-bindings.xml
-#         --proxy=myproject-client-glue.h --adaptor=myproject-server-glue.h
-#     DEPENDS dbus/myproject-bindings.xml
-#     COMMENT "Generating D-Bus interfaces for ${PROJECT_NAME}."
-# )
-
-add_executable(dbus_perm dbus_perm.cpp)
+add_executable(dbus_perm ${SRC_FILES})
 
 include_directories(${SQLITE3_INCLUDE_DIRS})
 target_link_libraries (dbus_perm ${SQLITE3_LIBRARIES})
