@@ -24,6 +24,25 @@ uint64_t SystemTime::GetSystemTime() {
 
   // ask permission
 
+  sdbus::ObjectPath objectPath{"/"};
+  auto proxy =
+      sdbus::createProxy("com.system.permissions", std::move(objectPath));
+
+  bool result = false;
+  proxy->callMethod("CheckApplicationHasPermission")
+      .onInterface("com.system.permissions")
+      .withArguments(path, PermissionManager::Permissions::SystemTime)
+      .storeResultsTo(result);
+
+  if (!result) {
+
+    char errMsg[255];
+    std::string connectionName;
+
+    sprintf(errMsg, "File %s: UnauthorizedAccess\n", path);
+    connection->requestName(connectionName);
+    throw sdbus::Error(connectionName, errMsg);
+  }
   // get sys time
   auto currTime =
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

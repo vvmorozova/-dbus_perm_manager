@@ -9,8 +9,9 @@
 class PermissionManager {
 public:
   PermissionManager();
-
   void start();
+
+  enum Permissions { SystemTime = 0 };
 
 private:
   void RequestPermission(int permissionEnumCode);
@@ -19,4 +20,5 @@ private:
 
   std::unique_ptr<sdbus::IObject> dbusObject;
   std::unique_ptr<sdbus::IConnection> connection;
+
 };

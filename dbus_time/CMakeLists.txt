@@ -15,6 +15,7 @@ target_link_libraries (${PROJECT_NAME} ${SQLITE3_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC sqlite3)
 
 # Use the sdbus-c++ target in SDBusCpp namespace
-target_link_libraries(${PROJECT_NAME} PRIVATE SDBusCpp::sdbus-c++)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE utils)
+target_link_libraries(${PROJECT_NAME} PRIVATE utils dbus_perm_lib SDBusCpp::sdbus-c++)
+
+

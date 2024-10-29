@@ -5,6 +5,8 @@
 #include <sdbus-c++/sdbus-c++.h>
 
 #include "utils.h"
+#include "permissions_manager.h"
+
 class SystemTime {
 public:
   SystemTime();
