@@ -35,13 +35,9 @@ uint64_t SystemTime::GetSystemTime() {
       .storeResultsTo(result);
 
   if (!result) {
-
-    char errMsg[255];
-    std::string connectionName;
-
-    sprintf(errMsg, "File %s: UnauthorizedAccess\n", path);
-    connection->requestName(connectionName);
-    throw sdbus::Error(connectionName, errMsg);
+    throw sdbus::Error("com.system.permissions.Error.UnathorizedAccess",
+                       "Time permissions was no granted to " + path);
+    return 0;
   }
   // get sys time
   auto currTime =

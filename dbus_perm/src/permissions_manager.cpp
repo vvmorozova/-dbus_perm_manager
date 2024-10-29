@@ -8,12 +8,12 @@ PermissionManager::PermissionManager() {
   dbusObject = sdbus::createObject(*connection, std::move(objectPath));
 
   dbusObject->registerMethod("RequestPermission")
-      .onInterface("com.system.permissions")
+      .onInterface(serviceName)
       .withInputParamNames("permissionEnumCode")
       .implementedAs(std::move([this](int type) { RequestPermission(type); }));
 
   dbusObject->registerMethod("CheckApplicationHasPermission")
-      .onInterface("com.system.permissions")
+      .onInterface(serviceName)
       .withInputParamNames("applicationExecPath", "permissionEnumCode")
       .implementedAs(std::move([this](std::string path, int type) {
         CheckApplicationHasPermission(path, type);
@@ -39,12 +39,9 @@ bool PermissionManager::CheckApplicationHasPermission(
 
   int rc = sqlite3_open("permissions.db", &db);
   if (rc != SQLITE_OK) {
-    char errMsg[255];
-    std::string connectionName;
 
-    sprintf(errMsg, "Failed to open DB: %s\n", sqlite3_errmsg(db));
-    connection->requestName(connectionName);
-    throw sdbus::Error(connectionName, errMsg);
+    throw sdbus::Error("com.system.permissions.Error.SQLite",
+                       sqlite3_errmsg(db));
     return false;
   }
 
@@ -54,13 +51,8 @@ bool PermissionManager::CheckApplicationHasPermission(
 
   sqlite3_prepare_v2(db, checkSQL, -1, &stmt, nullptr);
   if (rc != SQLITE_OK) {
-    char errMsg[255];
-    std::string connectionName;
-
-    sprintf(errMsg, "Failed to prepare record: %s\n", sqlite3_errmsg(db));
-    connection->requestName(connectionName);
-    throw sdbus::Error(connectionName, errMsg);
-
+    throw sdbus::Error("com.system.permissions.Error.SQLite",
+                       sqlite3_errmsg(db));
     return false;
   }
 
@@ -74,12 +66,9 @@ bool PermissionManager::CheckApplicationHasPermission(
   bool exists = (rc == SQLITE_ROW);
 
   sqlite3_finalize(stmt);
-  if (!exists)
-  {
-    char errMsg[255];
-    std::string connectionName;
-    connection->requestName(connectionName);
-    throw sdbus::Error(connectionName, "Unathorized access");
+  if (!exists) {
+    throw sdbus::Error("com.system.permissions.Error.UnathorizedAccess",
+                       "No permissions granted to " + applicationExecPath);
   }
   return exists;
 }
