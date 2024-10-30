@@ -1,8 +1,0 @@
-[Unit]
-Description=com.system.time
-
-[Service]
-ExecStart=/home/vasuyan/Documents/dbus_perm_manager/dbus_perm/build/dbus_time
-
-[Install]
-WantedBy=multi-user.target

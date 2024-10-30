@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=com.system.permissions
-Exec=/home/vasuyan/Documents/dbus_perm_manager/dbus_perm/build/dbus_perm
