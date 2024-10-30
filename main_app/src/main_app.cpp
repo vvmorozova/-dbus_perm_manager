@@ -2,13 +2,15 @@
 
 int main() {
   // get sys time
-
+  auto connection = sdbus::createSessionBusConnection();
   sdbus::ObjectPath objectPath{"/"};
-  auto timeProxy = sdbus::createProxy("com.system.time", std::move(objectPath));
+  auto timeProxy =
+      sdbus::createProxy(*connection, "com.system.time", std::move(objectPath));
   std::cout << "0" << std::endl;
-  int result = 0;
+  uint64_t result = 0;
   timeProxy->callMethod("GetSystemTime")
       .onInterface("com.system.time")
+      .withArguments()
       .storeResultsTo(result);
 
   std::cout << "1" << std::endl;
