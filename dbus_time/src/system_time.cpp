@@ -10,7 +10,8 @@ SystemTime::SystemTime() {
   dbusObject->registerMethod("GetSystemTime")
       .onInterface("com.system.time")
       .withInputParamNames()
-      .implementedAs(std::move([this]() { GetSystemTime(); }));
+      .implementedAs(std::move([this]() -> uint64_t { return this->GetSystemTime(); }))
+      .withOutputParamNames("timestamps");
 
   dbusObject->finishRegistration();
 }
@@ -25,15 +26,18 @@ uint64_t SystemTime::GetSystemTime() {
   // ask permission
 
   sdbus::ObjectPath objectPath{"/"};
-  auto proxy =
-      sdbus::createProxy("com.system.permissions", std::move(objectPath));
+  auto proxy = sdbus::createProxy(*connection, "com.system.permissions",
+                                  std::move(objectPath));
 
-  bool result = false;
+  std::cout << "00" << std::endl;
+  bool result = 0;
+  int permType = PermissionManager::Permissions::SystemTime;
+
   proxy->callMethod("CheckApplicationHasPermission")
       .onInterface("com.system.permissions")
-      .withArguments(path, PermissionManager::Permissions::SystemTime)
+      .withArguments(path, permType)
       .storeResultsTo(result);
-
+  std::cout << "11 " << result << std::endl;
   if (!result) {
     throw sdbus::Error("com.system.permissions.Error.UnathorizedAccess",
                        "Time permissions was no granted to " + path);

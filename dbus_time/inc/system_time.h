@@ -2,6 +2,7 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <stdbool.h>
 #include <sdbus-c++/sdbus-c++.h>
 
 #include "utils.h"

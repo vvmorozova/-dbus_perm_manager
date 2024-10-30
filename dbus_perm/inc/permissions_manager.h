@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <stdbool.h>
 #include <sdbus-c++/sdbus-c++.h>
 
 #include "sql.h"

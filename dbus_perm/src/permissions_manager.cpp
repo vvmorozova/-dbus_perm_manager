@@ -15,10 +15,10 @@ PermissionManager::PermissionManager() {
   dbusObject->registerMethod("CheckApplicationHasPermission")
       .onInterface(serviceName)
       .withInputParamNames("applicationExecPath", "permissionEnumCode")
-      .implementedAs(std::move([this](std::string path, int type) {
-        CheckApplicationHasPermission(path, type);
-      }));
-
+      .implementedAs(std::move([this](std::string path, int type) -> bool {
+        return this->CheckApplicationHasPermission(path, type);
+      }))
+      .withOutputParamNames("exists");
   dbusObject->finishRegistration();
 }
 
@@ -34,8 +34,6 @@ void PermissionManager::RequestPermission(int permissionEnumCode) {
 bool PermissionManager::CheckApplicationHasPermission(
     std::string applicationExecPath, int permissionEnumCode) {
   sqlite3 *db;
-
-  std::cout << "in check app perm" << std::endl;
 
   int rc = sqlite3_open("permissions.db", &db);
   if (rc != SQLITE_OK) {
