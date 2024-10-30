@@ -26,7 +26,6 @@ void PermissionManager::start() { connection->enterEventLoop(); }
 
 void PermissionManager::RequestPermission(int permissionEnumCode) {
   std::string path = getPath(dbusObject, connection);
-  std::cout << "Path " << path << std::endl;
 
   int dbRes = writeRecordToDB(permissionEnumCode, path);
 }
@@ -58,12 +57,10 @@ bool PermissionManager::CheckApplicationHasPermission(
   sqlite3_bind_int(stmt, 2, permissionEnumCode);
 
   rc = sqlite3_step(stmt);
+  sqlite3_finalize(stmt);
   // If a row is returned, the record exists
-  std::cout << "path " << applicationExecPath << " code " << permissionEnumCode
-            << " rc " << rc << std::endl;
   bool exists = (rc == SQLITE_ROW);
 
-  sqlite3_finalize(stmt);
   if (!exists) {
     throw sdbus::Error("com.system.permissions.Error.UnathorizedAccess",
                        "No permissions granted to " + applicationExecPath);

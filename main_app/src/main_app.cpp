@@ -6,26 +6,26 @@ int main() {
   sdbus::ObjectPath objectPath{"/"};
   auto timeProxy =
       sdbus::createProxy(*connection, "com.system.time", std::move(objectPath));
-  std::cout << "0" << std::endl;
   uint64_t result = 0;
-  timeProxy->callMethod("GetSystemTime")
-      .onInterface("com.system.time")
-      .withArguments()
-      .storeResultsTo(result);
+  try {
+    timeProxy->callMethod("GetSystemTime")
+        .onInterface("com.system.time")
+        .withArguments()
+        .storeResultsTo(result);
+  } catch (sdbus::Error &e) {
+    std::cout << "Permissions not granted, trying to receive them" << std::endl;
+  }
 
-  std::cout << "1" << std::endl;
   // if no rights, ask for perm
   if (result == 0) {
     auto permProxy =
-        sdbus::createProxy("com.system.permissions", std::move(objectPath));
+        sdbus::createProxy(*connection, "com.system.permissions", "/");
 
-    result = 0;
     permProxy->callMethod("RequestPermission")
         .onInterface("com.system.permissions")
-        .withArguments(PermissionManager::Permissions::SystemTime)
-        .storeResultsTo(result);
+        .withArguments(PermissionManager::Permissions::SystemTime);
   }
-  std::cout << "2" << std::endl;
+ std::cout << "Permissions are granted" << std::endl;
   // get sys time again
 
   result = 0;
@@ -33,5 +33,12 @@ int main() {
       .onInterface("com.system.time")
       .storeResultsTo(result);
 
-  std::cout << "main curr time " << result << std::endl;
+  std::chrono::system_clock::time_point tp =
+      std::chrono::system_clock::time_point(std::chrono::seconds(result));
+
+  std::time_t time = std::chrono::system_clock::to_time_t(tp);
+
+  std::cout << "Date: "
+            << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S")
+            << std::endl;
 }
